@@ -1,0 +1,24 @@
+# Function to resize video to 144p resolution
+def resize_video(clip):
+    return clip.resize(height=144)
+
+# Function to change video frame rate to 2 fps
+def change_fps(clip):
+    return clip.set_fps(2)
+
+# Load the original video
+video_path = "bunny.mp4"  # Replace with your video file path
+original_clip = VideoFileClip(video_path)
+
+# Task 1: Convert to 144p resolution
+resized_clip = resize_video(original_clip)
+resized_clip.write_videofile("144p_resolution.mp4", codec="libx264", audio_codec="aac")
+
+# Task 2: Convert the original video to 2 fps
+low_fps_clip = change_fps(original_clip)
+low_fps_clip.write_videofile("2fps_video.mp4", codec="libx264", audio_codec="aac")
+
+# Task 3: Convert to 144p resolution and 2 fps
+combined_clip = resize_video(original_clip)
+combined_clip = change_fps(combined_clip)
+combined_clip.write_videofile("144p_resolution_2fps.mp4", codec="libx264", audio_codec="aac")
