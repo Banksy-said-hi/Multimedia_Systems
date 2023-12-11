@@ -1,0 +1,91 @@
+import os
+import numpy as np
+from PIL import Image
+
+# Path to your original PNG image
+image_path = 'garnacho.jpeg'
+
+# Load the original image
+original_image = Image.open(image_path)
+
+# Print original image details
+print(f"The original image {image_path} has been loaded.")
+
+print("===========================================")
+print(f"Original image size: {original_image.size}")
+print(f"Original image mode: {original_image.mode}")
+print("===========================================")
+
+# Define the compression level for compression
+compression_level = int(input("Enter compression quality (1-95): "))
+
+print(f"Compression level set to {compression_level}")
+print("===========================================")
+
+# Specify the filename for the compressed image
+compressed_image_path = 'compressed_garnacho.jpg'
+
+# Compress and save the image as JPEG
+original_image.save(compressed_image_path, 'JPEG', quality=compression_level)
+print(f"Image has been compressed and saved as {compressed_image_path}")
+
+# Get the file sizes of the original and compressed images
+original_size = os.path.getsize(image_path)
+compressed_size = os.path.getsize(compressed_image_path)
+
+# Print file size information
+print(f"Original image size: {original_size} bytes")
+print(f"Compressed image size: {compressed_size} bytes")
+print("Calculating the size difference...")
+# Calculate and print the size reduction
+size_difference = original_size - compressed_size
+
+print("===========================================")
+print(f"Size reduction: {size_difference} bytes")
+print("===========================================")
+
+# Load the compressed JPEG image
+print("Loading the compressed JPEG...")
+compressed_image = Image.open(compressed_image_path)
+
+# Specify the filename for the decompressed image (back to PNG format)
+decompressed_image_path = 'decompressed_garnacho.png'
+
+# Save the decompressed image as PNG
+print("Saving the decompressed image as PNG...")
+compressed_image.save(decompressed_image_path, 'PNG')
+# print(f"Compressed image has been saved back to PNG format as {decompressed_image_path}")
+
+# Optionally, you can compare the size of this new PNG with the original PNG
+print("Comparing the size of this new PNG with the original PNG...")
+decompressed_size = os.path.getsize(decompressed_image_path)
+
+print("===========================================")
+print(f"Original image size: {original_size} bytes");
+print(f"Compressed image size: {compressed_size} bytes");
+print(f"Decompressed image size: {decompressed_size} bytes")
+
+def mse(imageA, imageB):
+    # Calculate the Mean Squared Error between two images
+    err = np.sum((np.array(imageA).astype("float") - np.array(imageB).astype("float")) ** 2)
+    err /= float(imageA.size[0] * imageA.size[1])
+    return err
+
+def psnr(original, compressed):
+    # Calculate PSNR (Peak Signal-to-Noise Ratio)
+    mse_value = mse(original, compressed)
+    if mse_value == 0:  # Means no difference
+        return float('inf')
+    max_pixel = 255.0
+    return 20 * np.log10(max_pixel / np.sqrt(mse_value))
+
+# Load your original and compressed images
+original_image = Image.open(image_path)
+compressed_image = Image.open(compressed_image_path)
+
+# Calculate PSNR
+print("Calculating the PSNR...");
+print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+psnr_value = psnr(original_image, compressed_image)
+print(f"PSNR value: {psnr_value} dB")
+print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
